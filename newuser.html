@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Home</title>
+</head>
+<body style="background-color: #e8eaed;">
+
+    <div class="container register">
+        <div class="row ">
+            <h4 class="mx-auto" style="font-weight: 200; margin-top: 1.5rem;">Welcome to the application</h4>
+        </div>
+        <hr>
+        <div class="row">
+            <p class="mx-auto text-muted">Enter a username for your account.</p>
+        </div>
+        <form class="row needs-validation" action="/newuser?key={{key}}" method="POST" novalidate>
+            <div class="container">
+                <div class="row">
+                    <input class="form-control mx-auto" type="text" placeholder="Username" name="username" style="width: 60%;text-align: center;" required min=3 max=20>
+                    <div class='invalid-feedback' style="text-align: center;">Username should be more than 3 characters and less than 20 characters</div>
+                </div>
+                <div class="row">
+                    <button type="submit" style="text-align: center;" class="btn btn-outline-primary mx-auto my-4" name="button" value = "addUser">Submit</button>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            {% if error == 'true' %}
+            <div class="alert alert-primary alert-dismissible fade show mx-auto" role="alert">
+                Username already exists, Try picking another
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+    
+    <script>
+        var form = document.querySelector('.needs-validation');
+
+        form.addEventListener('submit', function(event){
+            if(form.checkValidity() === false){
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    form.classList.add('was-validated');
+});
+    </script>
+
+    <script src="/bootstrap/js/jquery-3.4.1.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    <script src="/bootstrap/js/all.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+.bg-light {
+    background-color: #e8eaed !important;
+}
+.navbar{
+    border-bottom: 0.01rem solid #E0E0E0;
+    box-shadow:0px 1px 2px #E0E0E0;
+}
+
+@media only screen and (min-width: 995px) {
+    .navbar .container{
+        padding-left: 10em;
+        padding-right: 10em;
+    }
+}
+@media only screen and (max-width: 995px) {
+    .navbar .container{
+      width: 100%;
+    }
+    .user-det{
+        display: block;
+    }
+    .navbar-toggler{
+        margin-right: 0;
+    }
+}
+.user {
+    display: inline-block;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+  
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+.register{
+    min-height:20rem;
+    max-width:30rem;
+    background-color: white;
+    margin-top:4rem;
+    margin-bottom: 2rem;
+}
+
+  

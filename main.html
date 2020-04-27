@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Home</title>
+</head>
+<body >
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fab fa-2x fa-instagram"></i>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav m-auto">
+                    <li class="nav-item">
+                        <form class="form-inline my-2 my-lg-0">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Enter Username" aria-label="Search">
+                            <button class="btn btn-outline-info my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
+                          </form>
+                      </li>
+                </ul>
+                <ul class="navbar-nav ml-auto mr-0">
+                    {% if user %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="ml-auto mr-0"><img class="user" src="/image/img.png" alt=""></span>
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{logout}}">Logout</a> 
+                          </div>
+                    </li>
+                    {% else %}
+                    <a href="{{login}}" class="btn btn-outline-info">Login</a>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="jumbotron">
+            {% if user %}
+            <h1 class="display-4">Hello, {{username}}</h1>
+            <p class="lead">Welcome to your account</p>
+            <hr class="my-4">
+            <p>Email:{{name}}</p>
+          {%else%}
+          <h1 class="display-4">Hello, Guest</h1>
+          <p class="lead">Welcome to the application</p>
+          <hr class="my-4">
+          <p>You can login here <a href="{{login}}">Login</a></p>
+          {% endif %}
+          </div>
+    </div>
+    
+
+    <script src="/bootstrap/js/jquery-3.4.1.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    <script src="/bootstrap/js/all.js"></script>
+</body>
+</html>
