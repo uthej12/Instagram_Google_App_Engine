@@ -45,22 +45,84 @@
         </div>
     </nav>
 
-    <div class="container">
-        <div class="jumbotron">
-            {% if user %}
-            <h1 class="display-4">Hello, {{username}}</h1>
-            <p class="lead">Welcome to your account</p>
-            <hr class="my-4">
-            <p>Email:{{name}}</p>
-          {%else%}
-          <h1 class="display-4">Hello, Guest</h1>
-          <p class="lead">Welcome to the application</p>
-          <hr class="my-4">
-          <p>You can login here <a href="{{login}}">Login</a></p>
-          {% endif %}
-          </div>
+    {% if user == True %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-2">
+                <span class="ml-auto mr-0"><img src="/image/img.png" alt="" style="height: 8rem;width: 8rem;border-radius: 50%;"></span>
+            </div>
+            <div class="col-6">
+                <div class="container">
+                     <div class="row">
+                            Username:{{current_user.username}}<br>
+                            Email:{{current_user.email}}
+                     </div>
+                </div>
+            </div>
+            <div class="col-1">
+                Followers<br>
+                {{current_user.followers | length}}
+            </div>
+            <div class="col-1">
+                Following<br>
+                {{current_user.following | length}}
+            </div>
+            <div class="col-2">
+                <button type="button" class="btn btn-primary" data-toggle="modal" style="margin-top: 2rem;" data-target="#exampleModal">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <hr class="my-4">
     </div>
-    
+    {% else %}
+    <div class="container" style="min-height:35rem;"> 
+        <div class="row">
+            <div class="col-sm-6 col-12 center-items" style="border-right: 1px solid #f3f3f3;">
+                <h3>Welcome to the Application</h3>
+            </div>
+            <div class="col-sm-6 center-items">
+                <a class = "btn btn-outline-primary" style="width: 100px;" href="{{login}}">Login</a>
+            </div>
+        </div>
+    </div>
+    {%endif%}
+
+    <div class="container">
+        
+    </div>
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #e8eaed ;">
+              <h5 class="modal-title">Post</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="{{post_image}}" method="POST" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <label for="image">Select Image</label>
+                            <input class="form-control" type="file" name="image"><br>
+                        </div>
+                        <div class="row">
+                            <label for="caption">Example textarea</label>
+                            <textarea class="form-control" id="caption" name="caption" rows="3"></textarea>
+                        </div>
+                    </div>    
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-primary" type="submit" name="submit" value="Submit">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
     <script src="/bootstrap/js/jquery-3.4.1.min.js"></script>
     <script src="/bootstrap/js/bootstrap.js"></script>

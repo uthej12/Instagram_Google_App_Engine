@@ -40,5 +40,11 @@
     margin-top:4rem;
     margin-bottom: 2rem;
 }
-
+.center-items{
+    height: 35rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
   

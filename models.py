@@ -5,10 +5,10 @@ class User(ndb.Model):
     username = ndb.StringProperty()
     followers = ndb.JsonProperty(repeated = True)
     following = ndb.JsonProperty(repeated = True)
+    Posts = ndb.JsonProperty(repeated = True)
 
 class Post(ndb.Model):
     image =  ndb.BlobKeyProperty()
-    username = ndb.StringProperty()
-    email = ndb.StringProperty()
+    owner = ndb.StructuredProperty(User)
     caption = ndb.StringProperty()
 
