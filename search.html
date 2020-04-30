@@ -54,19 +54,53 @@
         </div>
     </nav>
 
-    {% if user == True %}
-    {% else %}
-    <div class="container" style="min-height:35rem;"> 
-        <div class="row">
-            <div class="col-sm-6 col-12 center-items" style="border-right: 1px solid #f3f3f3;">
-                <h3 style="font-weight: 300;">Welcome to the Application</h3>
-            </div>
-            <div class="col-sm-6 center-items">
-                <a class = "btn btn-outline-primary" style="width: 100px;" href="{{login}}">Login</a>
-            </div>
+    <div class="container search_page">
+        <div class="row"> 
+            <h4>Search Results for <b>"{{query}}"</b></h4>
         </div>
+        <hr>
+        {% for user in search_results %}
+            <div class="row box">
+                <a class="card user_search_results" href="/profile?key={{user.get().key.urlsafe()}}">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-3" style="padding-top: 0.5rem;">
+                                {% if user.get().profileImage == None %}
+                                <div class="center-cropped" style="background-image: url(/image/img.png);width: 5rem;height: 5rem;border-radius: 50%;">
+                        
+                                </div>
+                                {% else %}
+                                <div class="center-cropped" style="background-image: url(/view_photo/{{user.get().profileImage}});width: 5rem;height: 5rem;border-radius: 50%;">
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-6" style="padding-top: 1.5rem;">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col">
+                                           <h5 style="font-weight: 500;margin-bottom: 0;">{{user.get().username}}</h5>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                       <div class="col">
+                                          <p class="text-muted">{{user.get().email}}</p>
+                                       </div>
+                                   </div>
+                               </div>
+                            </div>
+                            <div class="col-3" style="padding-top: 2rem;">
+                                <div class="container" style="text-align: center;">
+                                    <div class="row">
+                                        <p>{{user.get().followers | length}}<br>followers</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>   
+            </div>
+        {% endfor %}
     </div>
-    {%endif%}
 
     
     <script src="/bootstrap/js/jquery-3.4.1.min.js"></script>

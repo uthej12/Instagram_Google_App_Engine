@@ -14,7 +14,7 @@ from newuser import newuser
 from blobstore import UploadHandler
 from blobstore import ViewPhotoHandler
 from profile import Profile
-from search import Search
+
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 loader = jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -23,7 +23,7 @@ autoescape = True)
 
 
 
-class Insta(webapp2.RequestHandler):
+class Search(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = "text/html"
 
@@ -75,13 +75,38 @@ class Insta(webapp2.RequestHandler):
                 'name':''
             }
 
-        template = JINJA_ENVIRONMENT.get_template('main.html')
-        self.response.write(template.render(template_values))
-                    
+        if self.request.get('button') == 'search':
+            query = self.request.get('search_string')
+            template_values['query'] = query
+            if len(query) == 0:
+                s = User.query().fetch(50)
+                results = []
+                for user in s:
+                    results.append(user.key)
+                template_values['search_results'] = results
+            else:
+                if len(query.split('.')) > 1:
+                    new_query = ''
+                    for word in query.split('.'):
+                        new_query = new_query+' '+str(word)
+                    query = new_query
+                results = search.Index(name='user_search').search('username:'+query)
+                email_results = search.Index(name='user_search').search('email:'+query)
+                
+                search_results = []
+                for item in results:
+                    urlsafe_key = item.doc_id
+                    key = ndb.Key(urlsafe = urlsafe_key)
+                    if key not in search_results:
+                        search_results.append(key)
+                for item in email_results:
+                    urlsafe_key = item.doc_id
+                    key = ndb.Key(urlsafe = urlsafe_key)
+                    if key not in search_results:
+                        search_results.append(key)
+                template_values['search_results'] = search_results
 
-app = webapp2.WSGIApplication([('/',Insta),
-('/newuser',newuser),
-('/upload_photo', UploadHandler),
-('/view_photo/([^/]+)?', ViewPhotoHandler),
-('/profile',Profile),   
-('/search',Search)],debug = True)
+        
+
+        template = JINJA_ENVIRONMENT.get_template('search.html')
+        self.response.write(template.render(template_values))

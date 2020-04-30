@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Home</title>
+</head>
+<body >
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fab fa-2x fa-instagram"></i>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav m-auto">
+                    <li class="nav-item">
+                        <form class="form-inline my-2 my-lg-0" action="/search" method="GET">
+                            <input class="form-control mr-sm-2" type="search" name="search_string" placeholder="Enter Username" aria-label="Search">
+                            <button class="btn btn-outline-info my-2 my-sm-0" type="submit" name="button" value="search"><i class="fas fa-search"></i></button>
+                        </form>
+                      </li>
+                </ul>
+                <ul class="navbar-nav ml-auto mr-0">
+                    {% if user %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% if current_user.profileImage == None %}
+                            <div class="center-cropped" style="background-image: url(/image/img.png);width: 2rem;height: 2rem;border-radius: 50%;margin: 0;">
+                                
+                            </div>
+                            {% else %}
+                            <div class="center-cropped" style="background-image: url(/view_photo/{{current_user.profileImage}});width: 2rem;height: 2rem;border-radius: 50%;margin: 0;">
+                                
+                            </div>
+                            {% endif %}
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/profile?key={{current_user.key.urlsafe()}}">Profile</a>
+                            <a class="dropdown-item" href="{{logout}}">Logout</a> 
+                          </div>
+                    </li>
+                    {% else %}
+                    <a href="{{login}}" class="btn btn-outline-info">Login</a>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    
+    <div class="container mt-4">
+        <div class="row" style="text-align: center;">
+            <div class="col-md-2">
+                {% if current_profile.email == current_user.email %}
+                    {% if current_profile.profileImage == None %}
+                    <div class="center-cropped" style="background-image: url(/image/img.png);width: 8rem;height: 8rem;border-radius: 50%;">
+                        <div class="overlay" style="border-radius: 50%;">
+                            <div class="hover-text">
+                                <button class="btn"  data-toggle="modal" data-target="#ProfilePhoto"><i class="fas fa-edit"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="center-cropped" style="background-image: url(/view_photo/{{current_profile.profileImage}});width: 8rem;height: 8rem;border-radius: 50%;">
+                        <div class="overlay" style="border-radius: 50%;">
+                            <div class="hover-text">
+                                <button class="btn"  data-toggle="modal" data-target="#ProfilePhoto"><i class="fas fa-edit"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    {% if current_profile.profileImage == None %}
+                    <div class="center-cropped" style="background-image: url(/image/img.png);width: 8rem;height: 8rem;border-radius: 50%;">
+                        
+                    </div>
+                    {% else %}
+                    <div class="center-cropped" style="background-image: url(/view_photo/{{current_profile.profileImage}});width: 8rem;height: 8rem;border-radius: 50%;">
+                        
+                    </div>
+                    {% endif %}                
+                {% endif %}
+            </div>
+            <div class="col-md-4 profile-details" style="text-align: left;padding-left: 4rem;">
+                <div class="container">
+                     <div class="row">
+                         <div class="col">
+                            <h5 style="font-weight: 500;margin-bottom: 0;">{{current_profile.username}}</h5>
+                         </div>
+                     </div>
+                     <div class="row">
+                        <div class="col">
+                           <p class="text-muted">{{current_profile.email}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <a class="follow" href="#">
+                    {{current_profile.followers | length}}<br>
+                    followers
+                </a>
+            </div>
+            <div class="col-md-2 col-6" >
+                <a class="follow" href="#">
+                    {{current_profile.following | length}}<br>
+                    following
+                </a>
+            </div>
+            {% if owner == True %}
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary" data-toggle="modal" style="margin-top: 2rem;" data-target="#AddPost">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            {% else %}
+            {% if user %}
+            <div class="col-md-2">
+                {%if following == true %}
+                <button type="button" class="btn btn-danger" style="margin-top: 2rem;">
+                    Unfollow
+                </button>
+                {% else %}
+                <button type="button" class="btn btn-success" style="margin-top: 2rem;">
+                    Follow
+                </button>
+                {% endif %}
+            </div>
+            {% endif %}
+            {%endif%}
+        </div>
+        <hr class="my-4">
+    </div>
+
+    <div class="container">
+        <div class="row">
+            {% for post in profile_posts | reverse %}
+            <div class="col-lg-4 col-sm-6">
+                <div class="center-cropped" style="background-image: url('/view_photo/{{post.image}}');">
+                    <div class="overlay">
+                        <div class="container-fluid">
+                            <div class="row" style="float: right; padding: 0.2rem;">
+                                {% if current_user.email == current_profile.email %}
+                                <form action="/profile?user_key={{current_user.key.urlsafe()}}&post_key={{post.key.urlsafe()}}" method="POST">
+                                    <button class="btn btn-outline-danger" type="submit" name="button" value="delete_post"><i class="fas fa-trash"></i></button>
+                                </form>
+                                {% endif %}
+                            </div>
+                            <div class="hover-text">{{post.caption}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="AddPost" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #e8eaed ;">
+              <h5 class="modal-title">Post</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="{{post_image}}" method="POST" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <label for="image">Select Image</label>
+                            <input class="form-control" type="file" name="image"  accept="image/*"><br>
+                        </div>
+                        <div class="row">
+                            <label for="caption">Example textarea</label>
+                            <textarea class="form-control" id="caption" name="caption" rows="3"></textarea>
+                        </div>
+                    </div>    
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-primary" type="submit" name="button" value="add_post">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="ProfilePhoto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #e8eaed ;">
+              <h5 class="modal-title">Add a Profile Picture</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="{{post_image}}" method="POST" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <label for="image">Select Image</label>
+                            <input class="form-control" type="file" name="image"  accept="image/*"><br>
+                        </div>
+                    </div>    
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-primary" type="submit" name="button" value="add_profile_pic">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    <script src="/bootstrap/js/jquery-3.4.1.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    <script src="/bootstrap/js/all.js"></script>
+</body>
+</html>

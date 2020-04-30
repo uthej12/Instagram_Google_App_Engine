@@ -3,6 +3,7 @@ import jinja2
 import os
 from google.appengine.api import users
 from google.appengine.ext import ndb
+from google.appengine.api import search
 
 from models import User
 from models import Post
@@ -12,6 +13,18 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 loader = jinja2.FileSystemLoader(os.path.dirname(__file__)),
 extensions = ['jinja2.ext.autoescape'],
 autoescape = True)
+
+def tokenize_autocomplete(phrase):
+    a = []
+    for word in phrase.split():
+        j = 1
+        while True:
+            for i in range(len(word) - j + 1):
+                a.append(word[i:i + j])
+            if j == len(word):
+                break
+            j += 1
+    return a
 
 class newuser(webapp2.RequestHandler):
     def get(self):
@@ -44,5 +57,17 @@ class newuser(webapp2.RequestHandler):
                 user_key = ndb.Key(urlsafe = user_key)
                 user = user_key.get()
                 user.username = username
-                user.put()
+                new_key = user.put()
+                
+                email = new_key.get().email.split('@')[0]
+                index = search.Index(name="user_search")
+                doc_id = new_key.urlsafe()
+                username = ','.join(tokenize_autocomplete(username))
+                email = ','.join(tokenize_autocomplete(str(email)))
+                document = search.Document(
+                doc_id=doc_id,
+                fields=[search.TextField(name='username', value=username),
+                        search.TextField(name='email', value=email)])
+                index.put(document)            
+
                 self.redirect('/')

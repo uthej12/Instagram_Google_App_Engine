@@ -6,6 +6,7 @@ class User(ndb.Model):
     followers = ndb.JsonProperty(repeated = True)
     following = ndb.JsonProperty(repeated = True)
     Posts = ndb.JsonProperty(repeated = True)
+    profileImage = ndb.BlobKeyProperty()
 
 class Post(ndb.Model):
     image =  ndb.BlobKeyProperty()
