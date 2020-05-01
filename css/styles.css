@@ -116,6 +116,12 @@
         text-align: center !important;
         padding-left: 0rem !important;
     }
+    .posts{
+        border-right: none !important;
+    }
+    .img-container-main{
+        padding: 0 !important;
+    }
 }
 
 .follow{

@@ -1,6 +1,7 @@
 import webapp2
 import jinja2
 import os
+import datetime
 from google.appengine.api import users
 from google.appengine.ext import ndb
 from google.appengine.ext.webapp import blobstore_handlers
@@ -23,7 +24,8 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
 
             user_photo = Post(image=upload.key(),
                             owner = current_user,
-                            caption = caption)
+                            caption = caption,
+                            timestamp= datetime.datetime.now())
             new_key = user_photo.put()
 
             self.redirect('/profile?key='+current_user.key.urlsafe())

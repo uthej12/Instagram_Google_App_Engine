@@ -55,7 +55,12 @@ class Insta(webapp2.RequestHandler):
                 if current_user.username == None:
                     self.redirect('/newuser?key='+user_key.urlsafe())
             
-            user_posts = Post.query(Post.owner.email == nickname).fetch()
+            all_users = []
+            all_users.append(nickname)
+            for user in user_key.get().following:
+                all_users.append(user)
+            
+            posts = Post.query(Post.owner.email.IN(all_users)).order(-Post.timestamp).fetch(50)
 
             logout_url = users.create_logout_url('/')
 
@@ -65,6 +70,7 @@ class Insta(webapp2.RequestHandler):
                 'logout': logout_url,
                 'name':nickname,
                 'current_user':user_key.get(),
+                'posts':posts
             }
         else:
             login_url = users.create_login_url('/')

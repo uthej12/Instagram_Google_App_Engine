@@ -12,4 +12,4 @@ class Post(ndb.Model):
     image =  ndb.BlobKeyProperty()
     owner = ndb.StructuredProperty(User)
     caption = ndb.StringProperty()
-
+    timestamp = ndb.DateTimeProperty()

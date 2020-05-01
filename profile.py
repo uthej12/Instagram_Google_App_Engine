@@ -98,3 +98,30 @@ class Profile(webapp2.RequestHandler):
             post_key.delete()
 
             self.redirect('/profile?key='+self.request.get('user_key'))
+        if self.request.get('button') == 'follow':
+            profile_key = ndb.Key(urlsafe = self.request.get('profile_key')).get()
+            current_user = users.get_current_user().nickname()
+            current_user = ndb.Key(User,current_user).get()
+
+            if profile_key.email not in current_user.following:
+                if current_user.email not in profile_key.followers:
+                    profile_key.followers.append(current_user.email)
+                    current_user.following.append(profile_key.email)
+                    profile_key.put()
+                    current_user.put()
+
+            self.redirect('/profile?key='+profile_key.key.urlsafe())
+
+        if self.request.get('button') == 'unfollow':
+            profile_key = ndb.Key(urlsafe = self.request.get('profile_key')).get()
+            current_user = users.get_current_user().nickname()
+            current_user = ndb.Key(User,current_user).get()
+
+            if profile_key.email in current_user.following:
+                if current_user.email in profile_key.followers:
+                    profile_key.followers.remove(current_user.email)
+                    current_user.following.remove(profile_key.email)
+                    profile_key.put()
+                    current_user.put()
+
+            self.redirect('/profile?key='+profile_key.key.urlsafe())

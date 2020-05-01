@@ -124,13 +124,17 @@
             {% if user %}
             <div class="col-md-2">
                 {%if following == true %}
-                <button type="button" class="btn btn-danger" style="margin-top: 2rem;">
-                    Unfollow
-                </button>
+                <form action="?profile_key={{current_profile.key.urlsafe()}}" method="POST">
+                    <button type="submit" name="button" value="unfollow" class="btn btn-danger" style="margin-top: 2rem;">
+                        Unfollow
+                    </button>
+                </form>
                 {% else %}
-                <button type="button" class="btn btn-success" style="margin-top: 2rem;">
-                    Follow
-                </button>
+                <form action="/profile?profile_key={{current_profile.key.urlsafe()}}" method="POST">
+                    <button type="submit" name="button" value="follow" class="btn btn-success" style="margin-top: 2rem;">
+                        Follow
+                    </button>
+                </form>
                 {% endif %}
             </div>
             {% endif %}
@@ -141,6 +145,11 @@
 
     <div class="container">
         <div class="row">
+            {% if profile_posts | length == 0 %}
+            <div class="col-12" style="text-align: center;">
+                <p class="text-muted">No posts yet.</p>
+            </div>
+            {% else %}
             {% for post in profile_posts | reverse %}
             <div class="col-lg-4 col-sm-6">
                 <div class="center-cropped" style="background-image: url('/view_photo/{{post.image}}');">
@@ -159,6 +168,7 @@
                 </div>
             </div>
             {% endfor %}
+            {% endif %}
         </div>
     </div>
 
@@ -181,7 +191,7 @@
                             <input class="form-control" type="file" name="image"  accept="image/*"><br>
                         </div>
                         <div class="row">
-                            <label for="caption">Example textarea</label>
+                            <label for="caption">Caption</label>
                             <textarea class="form-control" id="caption" name="caption" rows="3"></textarea>
                         </div>
                     </div>    
