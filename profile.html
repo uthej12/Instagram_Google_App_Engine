@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/styles.css">
-    <title>Home</title>
+    <title>{{current_profile.username}}</title>
 </head>
 <body >
 
@@ -42,6 +42,7 @@
                             {% endif %}
                           </a>
                           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/profile?key={{current_user.key.urlsafe()}}&add=true">Add Post</a>
                             <a class="dropdown-item" href="/profile?key={{current_user.key.urlsafe()}}">Profile</a>
                             <a class="dropdown-item" href="{{logout}}">Logout</a> 
                           </div>
@@ -116,9 +117,10 @@
             </div>
             {% if owner == True %}
             <div class="col-md-2">
-                <button type="button" class="btn btn-primary" data-toggle="modal" style="margin-top: 2rem;" data-target="#AddPost">
+                <button type="button" class="btn btn-outline-primary" data-toggle="modal" style="margin-top: 2rem;" data-target="#AddPost">
                     <i class="fas fa-plus"></i>
-                </button>
+                </button><br>
+                Add Post
             </div>
             {% else %}
             {% if user %}
@@ -162,7 +164,13 @@
                                 </form>
                                 {% endif %}
                             </div>
-                            <div class="hover-text">{{post.caption}}</div>
+                            <div class="hover-text">
+                                {% if user %}
+                                <a class="follow" style="color: white;" href='/post?key={{post.key.urlsafe()}}'>{{post.caption}}</a>
+                                {% else %}
+                                {{post.caption}}
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -357,7 +365,10 @@
       </div>
 
 
-      <script>
+    <script src="/bootstrap/js/jquery-3.4.1.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    <script src="/bootstrap/js/all.js"></script>
+    <script>
         var form = document.querySelector('.needs-validation');
 
         form.addEventListener('submit', function(event){
@@ -367,9 +378,25 @@
         }
         form.classList.add('was-validated');
         });
+        
+        function getUrlVars()
+        {
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for(var i = 0; i < hashes.length; i++)
+            {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
+        var add = getUrlVars()['add']
+
+        if(add == 'true'){
+            $('#AddPost').modal('show');
+        }
     </script>
-    <script src="/bootstrap/js/jquery-3.4.1.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.js"></script>
-    <script src="/bootstrap/js/all.js"></script>
 </body>
 </html>

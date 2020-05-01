@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/styles.css">
-    <title>Home</title>
+    <title>Search</title>
 </head>
 <body >
 
@@ -42,6 +42,7 @@
                             {% endif %}
                           </a>
                           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/profile?key={{current_user.key.urlsafe()}}&add=true">Add Post</a>
                             <a class="dropdown-item" href="/profile?key={{current_user.key.urlsafe()}}">Profile</a>
                             <a class="dropdown-item" href="{{logout}}">Logout</a> 
                           </div>

@@ -8,8 +8,14 @@ class User(ndb.Model):
     Posts = ndb.JsonProperty(repeated = True)
     profileImage = ndb.BlobKeyProperty()
 
+class Comment(ndb.Model):
+    author = ndb.StringProperty()
+    author_email = ndb.StringProperty()
+    comment = ndb.StringProperty()
+
 class Post(ndb.Model):
     image =  ndb.BlobKeyProperty()
     owner = ndb.StructuredProperty(User)
     caption = ndb.StringProperty()
     timestamp = ndb.DateTimeProperty()
+    comments = ndb.StructuredProperty(Comment, repeated = True)

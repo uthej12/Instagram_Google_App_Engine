@@ -148,3 +148,7 @@
         padding-right: 0 !important;
     }
 }
+.addComment {
+    resize: none; /* Remove this if you want the user to resize the textarea */
+    border:none
+}

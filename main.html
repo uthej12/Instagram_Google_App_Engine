@@ -42,6 +42,7 @@
                             {% endif %}
                           </a>
                           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/profile?key={{current_user.key.urlsafe()}}&add=true">Add Post</a>
                             <a class="dropdown-item" href="/profile?key={{current_user.key.urlsafe()}}">Profile</a>
                             <a class="dropdown-item" href="{{logout}}">Logout</a> 
                           </div>
@@ -69,8 +70,13 @@
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-sm-1 col-2">
-                                                <a href="/profile?key={{return_user_url(post.owner.email)}}"  class="center-cropped follow" style="background-image: url(/view_photo/{{post.owner.profileImage}});width: 2rem;height: 2rem;border-radius: 50%;margin: 0;">
+                                                {% if user_object(post.owner.email).profileImage == None %}
+                                                <a href="/profile?key={{return_user_url(post.owner.email)}}" class="center-cropped follow" style="background-image: url('image/img.png');width: 2rem;height: 2rem;border-radius: 50%;margin: 0;">
                                                 </a>
+                                                {% else %}
+                                                <a href="/profile?key={{return_user_url(post.owner.email)}}" class="center-cropped follow" style="background-image: url('/view_photo/{{user_object(post.owner.email).profileImage}}');width: 2rem;height: 2rem;border-radius: 50%;margin: 0;">
+                                                </a>
+                                                {% endif %}  
                                             </div>
                                             <div class="col-sm-11 col-10">
                                                 <a href="/profile?key={{return_user_url(post.owner.email)}}" class="follow" style="display: inline;vertical-align: text-top;">{{post.owner.username}}</a>
@@ -87,6 +93,38 @@
                                 </div>
                                 <div class="card-body">
                                     <p><b>{{post.owner.username}}</b> {{post.caption}}</p>
+                                    {% if post.comments | length > 5 %}
+                                    <a href = "/post?key={{post.key.urlsafe()}}" class="text-muted follow"><p>View all comments</p></a>
+                                    <div class="container">
+                                        {% for comment in post.comments[-5:] | reverse %}
+                                        <div class="row">
+                                            <p><b>{{comment.author}}</b> {{comment.comment}}</p>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    <div class="container">
+                                        {% for comment in post.comments[-5:] | reverse %}
+                                        <div class="row">
+                                            <p><b>{{comment.author}}</b> {{comment.comment}}</p>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer" style="background-color: white; padding: 0;">
+                                    <div class="container" style="padding-left: 0;padding-right: 0;">
+                                        <form class="needs-validation" action="/?post_key={{post.key.urlsafe()}}" method="POST" novalidate>
+                                            <div class="row">
+                                                <div class="col-sm-9 col-12">
+                                                    <textarea class="form-control addComment" rows=2 style="border-radius: 0;" placeholder="Add a comment (max 200 char)" name="comment_{{post.key.urlsafe()}}" max=200 required></textarea>
+                                                </div>
+                                                <div class="col-sm-3 col-12">
+                                                    <button class="btn btn-primary mt-2" type='submit' name='button' value='addComment' style="padding: 0.2rem;">Comment</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -92,7 +92,8 @@ class Profile(webapp2.RequestHandler):
                 'name':'',
                 'current_profile':user_key.get(),
                 'current_user': None,
-                'profile_posts':profile_posts
+                'profile_posts':profile_posts,
+                'user_object': user_object
             }
 
         template = JINJA_ENVIRONMENT.get_template('profile.html')

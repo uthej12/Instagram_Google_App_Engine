@@ -9,12 +9,14 @@ from google.appengine.api import search
 
 from models import User
 from models import Post
+from models import Comment
 
 from newuser import newuser
 from blobstore import UploadHandler
 from blobstore import ViewPhotoHandler
 from profile import Profile
 from search import Search
+from displayPost import displayPost
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 loader = jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -24,6 +26,9 @@ autoescape = True)
 
 def return_url_key(email):
     return ndb.Key(User,email).urlsafe()
+
+def user_object(email):
+    return ndb.Key(User,email).get()
 
 class Insta(webapp2.RequestHandler):
     def get(self):
@@ -73,7 +78,8 @@ class Insta(webapp2.RequestHandler):
                 'name':nickname,
                 'current_user':user_key.get(),
                 'posts':posts,
-                'return_user_url': return_url_key
+                'return_user_url': return_url_key,
+                'user_object': user_object
             }
         else:
             login_url = users.create_login_url('/')
@@ -86,6 +92,22 @@ class Insta(webapp2.RequestHandler):
 
         template = JINJA_ENVIRONMENT.get_template('main.html')
         self.response.write(template.render(template_values))
+
+    def post(self):
+        self.response.write(self.request.get('button'))
+        if self.request.get('button') == 'addComment':
+            post_key = self.request.get('post_key')
+            comment_text = self.request.get('comment_'+post_key)
+
+            post = ndb.Key(urlsafe = post_key).get()
+            current_user = ndb.Key(User, users.get_current_user().nickname()).get()  
+            new_comment = Comment(author = current_user.username,
+                                author_email = current_user.email,
+                                comment = comment_text)
+            post.comments.append(new_comment)
+            post.put()
+
+            self.redirect('/')
                     
 
 app = webapp2.WSGIApplication([('/',Insta),
@@ -93,4 +115,5 @@ app = webapp2.WSGIApplication([('/',Insta),
 ('/upload_photo', UploadHandler),
 ('/view_photo/([^/]+)?', ViewPhotoHandler),
 ('/profile',Profile),   
-('/search',Search)],debug = True)
+('/search',Search),
+('/post',displayPost)],debug = True)
