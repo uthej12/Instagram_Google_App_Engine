@@ -22,6 +22,8 @@ extensions = ['jinja2.ext.autoescape'],
 autoescape = True)
 
 
+def return_url_key(email):
+    return ndb.Key(User,email).urlsafe()
 
 class Insta(webapp2.RequestHandler):
     def get(self):
@@ -70,7 +72,8 @@ class Insta(webapp2.RequestHandler):
                 'logout': logout_url,
                 'name':nickname,
                 'current_user':user_key.get(),
-                'posts':posts
+                'posts':posts,
+                'return_user_url': return_url_key
             }
         else:
             login_url = users.create_login_url('/')

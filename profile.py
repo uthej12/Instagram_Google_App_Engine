@@ -19,6 +19,11 @@ loader = jinja2.FileSystemLoader(os.path.dirname(__file__)),
 extensions = ['jinja2.ext.autoescape'],
 autoescape = True)
 
+
+def user_object(email):
+    return ndb.Key(User,email).get()
+
+
 class Profile(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = "text/html"
@@ -53,7 +58,7 @@ class Profile(webapp2.RequestHandler):
 
             logout_url = users.create_logout_url('/')
 
-            profile_posts = Post.query(Post.owner.email == user_key.get().email).fetch()
+            profile_posts = Post.query(Post.owner.email == user_key.get().email).order(Post.timestamp).fetch()
 
 
             template_values = {
@@ -63,7 +68,8 @@ class Profile(webapp2.RequestHandler):
                 'name':nickname,
                 'current_profile':user_key.get(),
                 'current_user': current_user_key.get(),
-                'profile_posts':profile_posts
+                'profile_posts':profile_posts,
+                'user_object': user_object
             }
 
             if current_user_key == user_key:

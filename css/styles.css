@@ -132,3 +132,19 @@
     text-decoration: none;
     color: #1b1b1c;
 }
+@media only screen and (max-width: 576px) {
+    .main-post{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-top: 1rem;
+        max-height: 400px;
+    }
+    .main-post .card{
+        min-height: 0 !important;
+        max-height: 400px !important;
+    }
+    .main-post .main-post-col{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
