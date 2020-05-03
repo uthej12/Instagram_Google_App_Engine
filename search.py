@@ -78,6 +78,21 @@ class Search(webapp2.RequestHandler):
         if self.request.get('button') == 'search':
             query = self.request.get('search_string')
             template_values['query'] = query
+
+            if '@' in list(query):
+                query = query.split('@')[0]
+
+            breakpoints ="! % ( ) * , - | / [ ] ] ^ ` : = > ? { } ~ $"
+            breakpoints = breakpoints.split(' ')
+
+            temp = list(query)
+            for point in breakpoints:
+                if point in temp: 
+                    temp.remove(point)
+                    query = ''.join(temp)
+                    temp = list(query)
+
+                
             if len(query) == 0:
                 s = User.query().fetch(50)
                 results = []

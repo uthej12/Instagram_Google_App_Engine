@@ -94,11 +94,11 @@
                                 <div class="card-body">
                                     <p><b>{{post.owner.username}}</b> {{post.caption}}</p>
                                     {% if post.comments | length > 5 %}
-                                    <a href = "/post?key={{post.key.urlsafe()}}" class="text-muted follow"><p>View all comments</p></a>
+                                    <a class="follow" href = "/post?key={{post.key.urlsafe()}}" class="text-muted follow"><p>View all comments</p></a>
                                     <div class="container">
                                         {% for comment in post.comments[-5:] | reverse %}
                                         <div class="row">
-                                            <p><b>{{comment.author}}</b> {{comment.comment}}</p>
+                                            <p><b><a href = "/profile?key={{user_object(comment.author_email).key.urlsafe()}}">{{comment.author}}</a></b> {{comment.comment}}</p>
                                         </div>
                                         {% endfor %}
                                     </div>
@@ -106,7 +106,7 @@
                                     <div class="container">
                                         {% for comment in post.comments[-5:] | reverse %}
                                         <div class="row">
-                                            <p><b>{{comment.author}}</b> {{comment.comment}}</p>
+                                            <p><b><a class="follow" href = "/profile?key={{user_object(comment.author_email).key.urlsafe()}}">{{comment.author}}</a></b> {{comment.comment}}</p>
                                         </div>
                                         {% endfor %}
                                     </div>

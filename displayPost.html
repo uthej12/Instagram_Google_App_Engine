@@ -95,7 +95,7 @@
                                     <div class="container">
                                         {% for comment in post.comments | reverse %}
                                         <div class="row">
-                                            <p><b>{{comment.author}}</b> {{comment.comment}}</p>
+                                            <p><b><a href = "/profile?key={{user_object(comment.author_email).key.urlsafe()}}">{{comment.author}}</a></b> {{comment.comment}}</p>
                                         </div>
                                         {% endfor %}
                                     </div>

@@ -59,7 +59,7 @@ class newuser(webapp2.RequestHandler):
                 user.username = username
                 new_key = user.put()
                 
-                email = new_key.get().email.split('@')[0]
+                email = new_key.get().email.split('@')[0]  
                 index = search.Index(name="user_search")
                 doc_id = new_key.urlsafe()
                 username = ','.join(tokenize_autocomplete(username))
